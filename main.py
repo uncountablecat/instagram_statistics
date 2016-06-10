@@ -9,9 +9,22 @@ def get_post_list(insta_id):
 	INTAKE: an Instagram insta_id
 	RETURN: a list of posts (photos or videos)
 	'''
-	r = requests.get('https://www.instagram.com/' + insta_id  + '/media/')
-	js_file = r.json()
-	post_list = js_file['items']
+	post_list = []
+	max_id = ''
+	all_posts_fetched = False
+
+	while all_posts_fetched == False:
+		r = requests.get('https://www.instagram.com/' + insta_id  + '/media/'+('?max_id=' + max_id if max_id != '' else ''))
+		js_file = r.json()
+
+		for i in js_file['items']:
+			post_list.append(i)
+
+		if js_file['more_available'] == True:
+			max_id = js_file['items'][-1]['id']
+			print(max_id)
+		else:
+			all_posts_fetched = True
 
 	return post_list
 
@@ -44,6 +57,7 @@ def write_to_csv(stats_list):
 
 if __name__ == '__main__':
 	insta_id = sys.argv[1]
+
 	post_list = get_post_list(insta_id)
 	stats_list = extract_statistics(post_list)
 	write_to_csv(stats_list)
