@@ -16,3 +16,7 @@ Output example (a csv file):
 |BD0cRr1r21l |	1652 |	20
 |BDBByF6L2__	| 718 |	8
 |BCmkWzPL2z1	| 668	| 0
+
+License:
+
+[WTFPL License](http://www.wtfpl.net/txt/copying/)
