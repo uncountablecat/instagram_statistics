@@ -1,6 +1,7 @@
 import json
 import requests
 import csv
+import sys
 
 
 def get_post_list(insta_id):
@@ -23,6 +24,26 @@ def extract_statistics(post_list):
 	stats_list = []
 
 	for i in range(0,num_of_posts-1):
-		stats_list.append([stats_dic[post_list[i]['code']], post_list[i]['likes']['count'], post_list[i]['likes']['count']])
+		stats_list.append([post_list[i]['code'], post_list[i]['likes']['count'], post_list[i]['comments']['count']])
 	
 	return stats_list
+
+def write_to_csv(stats_list):
+	'''
+	INTAKE: a list containing statistics
+	RETURN: a csv file
+	'''
+	output_file = open('account_statistics.csv','w')
+	output_writer = csv.writer(output_file)
+
+	output_writer.writerow(['post_id','num_of_likes','num_of_comments'])
+	for i in stats_list:
+		output_writer.writerow(i)
+		
+	output_file.close()
+
+if __name__ == '__main__':
+	insta_id = sys.argv[1]
+	post_list = get_post_list(insta_id)
+	stats_list = extract_statistics(post_list)
+	write_to_csv(stats_list)
