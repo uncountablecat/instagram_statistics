@@ -1,8 +1,10 @@
 import json
 import requests
+
+
 def get_post_list(insta_id):
 	'''
-	INTAKE: an Instagram insta_id
+	INTAKE: an Instagram id
 	RETURN: a list of posts (photos or videos)
 	'''
 	r = requests.get('https://www.instagram.com/' + insta_id  + '/media/')
