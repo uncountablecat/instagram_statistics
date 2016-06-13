@@ -1,7 +1,7 @@
+import sys
 import json
 import requests
-import csv
-import sys
+import unicodecsv as csv # emoji might be in captions
 
 
 def get_post_list(insta_id):
@@ -22,7 +22,6 @@ def get_post_list(insta_id):
 
 		if js_file['more_available'] == True:
 			max_id = js_file['items'][-1]['id']
-			print(max_id)
 		else:
 			all_posts_fetched = True
 
@@ -30,27 +29,37 @@ def get_post_list(insta_id):
 
 def extract_statistics(post_list):
 	'''
-	INTAKE: a list of posts (photos or videos)
-	RETURN: a list containing number of likes and comments of each post
+	INTAKE: a list of posts
+	RETURN: a dictionary of lists
 	'''
 	num_of_posts = len(post_list)
+
 	stats_list = []
+	caption_list = []
 
-	for i in range(0,num_of_posts):
+	for i in range(0, num_of_posts):
 		stats_list.append([post_list[i]['code'], post_list[i]['likes']['count'], post_list[i]['comments']['count']])
-	
-	return stats_list
+		if post_list[i]['caption'] == None: # check if there is caption
+			caption_list.append([post_list[i]['code'], ''])
+		else:
+			caption_list.append([post_list[i]['code'], post_list[i]['caption']['text'].replace("\n", " ")]) 
+			# some captions have '\n' but we want them to be in one line
 
-def write_to_csv(stats_list):
-	'''
-	INTAKE: a list containing statistics
-	RETURN: a csv file
-	'''
-	output_file = open('account_statistics.csv','w')
-	output_writer = csv.writer(output_file)
+	account_info = {'stats_list':stats_list, 'caption_list':caption_list}
 
-	output_writer.writerow(['post_id','num_of_likes','num_of_comments'])
-	for i in stats_list:
+	return account_info
+
+def write_to_csv(list_name,file_name,col_names):
+	'''
+	INTAKE: a list, name of the csv file, column names of the csv file
+	RETURN: a csv file with given name and column names
+	'''
+	output_file = open(file_name+'.csv','w')
+	output_writer = csv.writer(output_file,encoding='utf-8')
+
+	output_writer.writerow(col_names)
+
+	for i in list_name:
 		output_writer.writerow(i)
 		
 	output_file.close()
@@ -59,5 +68,7 @@ if __name__ == '__main__':
 	insta_id = sys.argv[1]
 
 	post_list = get_post_list(insta_id)
-	stats_list = extract_statistics(post_list)
-	write_to_csv(stats_list)
+	account_info = extract_statistics(post_list)
+
+	write_to_csv(account_info['stats_list'],'stats_list',['post_id','num_of_likes','num_of_comments'])
+	write_to_csv(account_info['caption_list'],'caption_list',['post_id','caption'])
