@@ -36,7 +36,7 @@ def extract_statistics(post_list):
 	num_of_posts = len(post_list)
 	stats_list = []
 
-	for i in range(0,num_of_posts-1):
+	for i in range(0,num_of_posts):
 		stats_list.append([post_list[i]['code'], post_list[i]['likes']['count'], post_list[i]['comments']['count']])
 	
 	return stats_list
