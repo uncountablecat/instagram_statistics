@@ -1,5 +1,7 @@
+import os
 import sys
 import json
+import urllib as urllib
 import requests
 import unicodecsv as csv # emoji might be in captions
 
@@ -49,6 +51,21 @@ def extract_statistics(post_list):
 
 	return account_info
 
+def download_photos(post_list):
+	'''
+	INTAKE: a list of posts
+	RETURN: 0
+	'''
+	if (os.path.exists("/Users/username/Desktop/"+ insta_id) == False):
+			os.mkdir("/Users/username/Desktop/"+ insta_id)
+			
+	for x in post_list:
+		url = x["images"]["standard_resolution"]["url"].replace("s640x640", "s1080x1080")
+		file_name = x["code"]
+		urllib.urlretrieve(url, "/Users/username/Desktop/"+ insta_id + "/" + file_name + ".jpg")
+
+	return 0
+
 def write_to_csv(list_name,file_name,col_names):
 	'''
 	INTAKE: a list, name of the csv file, column names of the csv file
@@ -72,3 +89,4 @@ if __name__ == '__main__':
 
 	write_to_csv(account_info['stats_list'],'stats_list',['post_id','num_of_likes','num_of_comments'])
 	write_to_csv(account_info['caption_list'],'caption_list',['post_id','caption'])
+	download_photos(post_list)
