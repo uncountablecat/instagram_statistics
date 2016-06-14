@@ -61,6 +61,7 @@ def download_photos(post_list):
 			
 	for x in post_list:
 		url = x["images"]["standard_resolution"]["url"].replace("s640x640", "s1080x1080")
+		# notice that 1080x1080 version might not exist at all
 		file_name = x["code"]
 		urllib.urlretrieve(url, "/Users/username/Desktop/"+ insta_id + "/" + file_name + ".jpg")
 
