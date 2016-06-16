@@ -24,7 +24,7 @@ Output example (csv files):
 |--------|---------|
 |BGjBnXAS8DR | 漏了一张！我喜欢这张啊啊啊 |
 
-|post_id | bio |
+|insta_id | bio |
 |-------|------|
 | omazeworld | "Omaze offers the chance to win once-in-a-lifetime experiences that also support social missions." |
 
