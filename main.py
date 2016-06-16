@@ -56,14 +56,13 @@ def download_photos(post_list):
 	INTAKE: a list of posts
 	RETURN: 0
 	'''
-	if (os.path.exists("/Users/username/Desktop/"+ insta_id) == False):
-			os.mkdir("/Users/username/Desktop/"+ insta_id)
+	if (os.path.exists("/Users/chaoguo/Desktop/"+ insta_id) == False):
+			os.mkdir("/Users/chaoguo/Desktop/"+ insta_id)
 			
 	for x in post_list:
 		url = x["images"]["standard_resolution"]["url"].replace("s640x640", "s1080x1080")
-		# notice that 1080x1080 version might not exist at all
 		file_name = x["code"]
-		urllib.urlretrieve(url, "/Users/username/Desktop/"+ insta_id + "/" + file_name + ".jpg")
+		urllib.urlretrieve(url, "/Users/chaoguo/Desktop/"+ insta_id + "/" + file_name + ".jpg")
 
 	return 0
 
@@ -82,6 +81,23 @@ def write_to_csv(list_name,file_name,col_names):
 		
 	output_file.close()
 
+def write_bio(insta_id):
+	'''
+	INTAKE: an Instagram id
+	RETURN: a csv file with bio
+	'''
+	r = requests.get("https://www.instagram.com/" + insta_id)
+	page_source = r.text
+
+	start_index = page_source.find("<meta property=\"og:description\" content=") + len("<meta property=\"og:description\" content=")
+	end_index = page_source.find("/>\n",start_index)
+	bio = page_source[start_index:end_index]
+	
+	bio_file = open(insta_id + '_bio.csv','w')
+	bio_writer = csv.writer(bio_file, encoding = 'utf-8')
+	bio_writer.writerow(['instagram_id','bio'])
+	bio_writer.writerow([insta_id,bio])
+
 if __name__ == '__main__':
 	insta_id = sys.argv[1]
 
@@ -90,4 +106,5 @@ if __name__ == '__main__':
 
 	write_to_csv(account_info['stats_list'],'stats_list',['post_id','num_of_likes','num_of_comments'])
 	write_to_csv(account_info['caption_list'],'caption_list',['post_id','caption'])
-	download_photos(post_list)
+	# download_photos(post_list)
+	write_bio(insta_id)
