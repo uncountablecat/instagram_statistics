@@ -56,13 +56,14 @@ def download_photos(post_list):
 	INTAKE: a list of posts
 	RETURN: 0
 	'''
-	if (os.path.exists("/Users/chaoguo/Desktop/"+ insta_id) == False):
-			os.mkdir("/Users/chaoguo/Desktop/"+ insta_id)
+	if (os.path.exists("/Users/USERNAME/Desktop/"+ insta_id) == False):
+			os.mkdir("/Users/USERNAME/Desktop/"+ insta_id)
 			
 	for x in post_list:
 		url = x["images"]["standard_resolution"]["url"].replace("s640x640", "s1080x1080")
+		# will replace with high resolution version if there is one
 		file_name = x["code"]
-		urllib.urlretrieve(url, "/Users/chaoguo/Desktop/"+ insta_id + "/" + file_name + ".jpg")
+		urllib.urlretrieve(url, "/Users/USERNAME/Desktop/"+ insta_id + "/" + file_name + ".jpg")
 
 	return 0
 
