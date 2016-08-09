@@ -85,19 +85,35 @@ def write_to_csv(list_name,file_name,col_names):
 def write_bio(insta_id):
 	'''
 	INTAKE: an Instagram id
-	RETURN: a csv file with bio
+	RETURN: a csv file with bio and total statistics
 	'''
 	r = requests.get("https://www.instagram.com/" + insta_id)
 	page_source = r.text
 
-	start_index = page_source.find("<meta property=\"og:description\" content=") + len("<meta property=\"og:description\" content=")
-	end_index = page_source.find("/>\n",start_index)
-	bio = page_source[start_index:end_index]
+	bio_start_index = page_source.find("<meta property=\"og:description\" content=") + len("<meta property=\"og:description\" content=")
+	bio_end_index = page_source.find("/>\n",bio_start_index)
+	bio = page_source[bio_start_index:bio_end_index]
+
+	followers_start_index = page_source.find("\"followed_by\":") + len("\"followed_by\":")
+	followers_end_index = page_source.find("}",followers_start_index)
+	followers = page_source[followers_start_index:followers_end_index]
+	followers = "".join([s for s in followers if s.isdigit()]) # not good enough?
 	
+	follows_start_index = page_source.find("\"follows\":") + len("\"follows\":")
+	follows_end_index = page_source.find("}",follows_start_index)
+	follows = page_source[follows_start_index:follows_end_index]
+	follows = "".join([s for s in follows if s.isdigit()])
+
+	np_start_index = page_source.find("\"media\":") + len("\"media\":")
+	np_end_index = page_source.find("\"page_info\"",np_start_index)
+	np = page_source[np_start_index:np_end_index]
+	np = "".join([s for s in np if s.isdigit()])
+
 	bio_file = open(insta_id + '_bio.csv','w')
 	bio_writer = csv.writer(bio_file, encoding = 'utf-8')
-	bio_writer.writerow(['instagram_id','bio'])
-	bio_writer.writerow([insta_id,bio])
+	bio_writer.writerow(['instagram_id','bio','num_of_posts','num_of_followers','num_of_followings'])
+	bio_writer.writerow([insta_id,bio,np,followers,follows])
+
 
 if __name__ == '__main__':
 	insta_id = sys.argv[1]
