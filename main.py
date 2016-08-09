@@ -128,7 +128,6 @@ def write_account_stats(insta_id):
 	bio_writer.writerow(['insta_id','num_of_posts','num_of_followers','num_of_followings','ts'])
 	bio_writer.writerow([insta_id,np,followers,follows,int(time.time())])
 
-
 if __name__ == '__main__':
 	insta_id = sys.argv[1]
 
