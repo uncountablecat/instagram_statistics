@@ -41,7 +41,7 @@ def extract_statistics(post_list):
 	caption_list = []
 
 	for i in range(0, num_of_posts):
-		stats_list.append([insta_id,post_list[i]['code'], post_list[i]['likes']['count'], post_list[i]['comments']['count'],int(time.time())])
+		stats_list.append([insta_id, post_list[i]['code'], post_list[i]['likes']['count'], post_list[i]['comments']['count'], post_list[i]['created_time'], int(time.time())])
 		if post_list[i]['caption'] == None: # check if there is caption
 			caption_list.append([insta_id,post_list[i]['code'], '',int(time.time())])
 		else:
@@ -134,7 +134,7 @@ if __name__ == '__main__':
 	post_list = get_post_list(insta_id)
 	account_info = extract_statistics(post_list)
 
-	write_to_csv(account_info['stats_list'],'stats_list',['insta_id','post_id','num_of_likes','num_of_comments','ts'])
-	write_to_csv(account_info['caption_list'],'caption_list',['insta_id','post_id','caption','ts'])
+	write_to_csv(account_info['stats_list'],insta_id+'_post_stats',['insta_id','post_id','num_of_likes','num_of_comments','created_ts','ts'])
+	write_to_csv(account_info['caption_list'],insta_id+'_post_captions',['insta_id','post_id','caption','ts'])
 	write_account_bio(insta_id)
 	write_account_stats(insta_id)
